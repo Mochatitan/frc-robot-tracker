@@ -55,7 +55,7 @@ public class Tracker {
     }
     
     // private static File file = new File("../data/save/Save.txt");
-    private static File file = new File("robotData.txt");
+    private static File file = new File("../robotData.txt");
     // saveData.put("this","isthis");
     public static void save(){
         
