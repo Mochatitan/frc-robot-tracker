@@ -1,11 +1,16 @@
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Tracker {
-
+    public static boolean testPrint = false;
+    public static ArrayList dataTracked = new ArrayList<String>();
+    
 
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -16,10 +21,17 @@ public class Tracker {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-      // Declaring ANSI_RESET so that we can reset the color 
-      public static final String ANSI_RESET = "\u001B[0m"; 
+    // Declaring ANSI_RESET so that we can reset the color 
+    public static final String ANSI_RESET = "\u001B[0m"; 
   
-
+    public static void initialize(String...data){
+        Tracker.load();
+        //dataTracked.addAll(data);
+        for(String str : data){
+            dataTracked.add(str);
+        }
+        //System.out.println(dataTracked.toString()); prints out the data tracked
+    }
     //money, level, exp
     static HashMap<String, String> saveData = new HashMap<String, String>();
     static ArrayList<String> lineList = new ArrayList<String>();
@@ -55,21 +67,27 @@ public class Tracker {
     }
     
     // private static File file = new File("../data/save/Save.txt");
-    private static File file = new File("../robotData.txt");
+    private static File file = new File("robotData.txt");
     // saveData.put("this","isthis");
+    static String newSave = "";
     public static void save(){
-        String newSave = "";
+        Tracker.newSave = "";
         for(String str : Tracker.lineList){
-            Tracker.
-            newSave += str;
+
+            //Tracker.newSave += str;
+
+            Tracker.newSave += Tracker.dataTracked.get(Tracker.lineList.indexOf(str));
+            Tracker.newSave += ":";
+            Tracker.newSave += Tracker.saveData.get(Tracker.dataTracked.get(Tracker.lineList.indexOf(str)));
+
             if((Tracker.lineList.size()-1) != Tracker.lineList.indexOf(str)){ 
                 // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
-                bar += "\n";
+                Tracker.newSave += "\n";
             }
-
-            // String[] arrOfStr = str.split(":", 2);
-            // saveData.put(arrOfStr[0],arrOfStr[1]);
         }
+        try{
+            writeFile("robotData.txt", Tracker.newSave); //writes to the file
+        } catch (IOException i) {}
 
     }
     public static void load(){
@@ -81,36 +99,56 @@ public class Tracker {
                 String line = scanner.nextLine();
                 Tracker.lineList.add(line);
             }
-
-            //Test printing
-            System.out.println("");
-            colorPrint(ANSI_YELLOW,"System reads:");
-            for(String s : Tracker.lineList){
-                System.out.println(s);
+            if(testPrint){
+                //Test printing
+                System.out.println("");
+                colorPrint(ANSI_YELLOW,"System reads:");
+                for(String s : Tracker.lineList){
+                    System.out.println(s);
+                }
+                colorPrint(ANSI_YELLOW, "--------------END----------");
+                System.out.println("");
             }
-            colorPrint(ANSI_YELLOW, "--------------END----------");
-            System.out.println("");
 
-
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                scanner.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            for(String str : Tracker.lineList){
+                String[] arrOfStr = str.split(":", 2);
+                saveData.put(arrOfStr[0],arrOfStr[1]);
         }
-        for(String str : Tracker.lineList){
-            String[] arrOfStr = str.split(":", 2);
-            saveData.put(arrOfStr[0],arrOfStr[1]);
+        if(testPrint){
+            colorPrint(ANSI_RED, "Values recieved:");
+            System.out.println(Tracker.saveData.get("times-shot"));
+            System.out.println(Tracker.saveData.get("level"));
+            System.out.println(Tracker.saveData.get("exp"));
+            colorPrint(ANSI_RED, "--------------END----------");
         }
-
-        colorPrint(ANSI_RED, "Values recieved:");
-        System.out.println(Tracker.saveData.get("times-shot"));
-        System.out.println(Tracker.saveData.get("level"));
-        System.out.println(Tracker.saveData.get("exp"));
-        colorPrint(ANSI_RED, "--------------END----------");
         
     }
     
     public static void colorPrint(String color, String msg){
         System.out.println(color + msg + ANSI_RESET); 
+    }
+    
+
+    public static void writeFile(String filename, String text) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(filename);
+            fos.write(text.getBytes("UTF-8"));
+        } catch (IOException e) {
+            close(fos);
+            throw e;
+        }
+    }
+
+    public static void close(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch(IOException ignored) {
+        }
     }
 
 }
