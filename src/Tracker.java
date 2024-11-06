@@ -58,7 +58,19 @@ public class Tracker {
     private static File file = new File("../robotData.txt");
     // saveData.put("this","isthis");
     public static void save(){
-        
+        String newSave = "";
+        for(String str : Tracker.lineList){
+            Tracker.
+            newSave += str;
+            if((Tracker.lineList.size()-1) != Tracker.lineList.indexOf(str)){ 
+                // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
+                bar += "\n";
+            }
+
+            // String[] arrOfStr = str.split(":", 2);
+            // saveData.put(arrOfStr[0],arrOfStr[1]);
+        }
+
     }
     public static void load(){
         Tracker.saveData.clear();
