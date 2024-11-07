@@ -1,18 +1,16 @@
-## Getting Started
+## ICED JAVA ROBOTICS TRACKER
+This is a data tracker for the FRC team 6894 Iced java, made by Luke R. It tracks things like how many miles the robot moves, or how many times it shoots, and stores those numbers in a txt file.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## HOW TO SETUP
+Simply make a copy of the Tracker.java file in your code folder that has RobotContainer.java
+Then, run Tracker.initialize at the RobotInit() method in the Robot.java file.
+fill Tracker.initialize() with all of the things being tracked, in a fashion like this example would be
+Tracker.initialize(nameOfData, nameOfData2, nameOfData3);
 
-## Folder Structure
+Also, to make sure that the new data is pushed to the txt file, add Tracker.save() to the disabledInit() inside the Robot.java class.
 
-The workspace contains two folders by default, where:
+## SETTING UP robotData.txt
+TBD
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## HOW TO USE
+Tracker.getInt(nameOfData) will give you the value of what the txt file says, and Tracker.set() will set the value to something else.
