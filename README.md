@@ -1,5 +1,5 @@
 ## ICED JAVA ROBOTICS TRACKER
-This is a data tracker for the FRC team 6894 Iced java, made by Luke R. It tracks things like how many miles the robot moves, or how many times it shoots, and stores those numbers in a txt file.
+This is a data tracker for the FRC team 6894 Iced java, made by Luke/mochatitan. It tracks things like how many miles the robot moves, or how many times it shoots, and stores those numbers in a txt file.
 
 ## HOW TO SETUP
 Simply make a copy of the Tracker.java file in your code folder that has RobotContainer.java
