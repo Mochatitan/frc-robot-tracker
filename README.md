@@ -10,7 +10,10 @@ Tracker.initialize(nameOfData, nameOfData2, nameOfData3);
 Also, to make sure that the new data is pushed to the txt file, add Tracker.save() to the disabledInit() inside the Robot.java class.
 
 ## SETTING UP robotData.txt
-TBD
+Fill it with whatever you want, in a format of 
+data-name:0
+data-name2:0
+Place it in the src/main/**deploy** folder to ensure it gets sent to the roborio
 
 ## HOW TO USE
 Tracker.getInt(nameOfData) will give you the value of what the txt file says, and Tracker.set() will set the value to something else.
