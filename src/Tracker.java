@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Tracker {
+
+    public static final String FILEPATH = "robot data.txt";
+
     public static boolean testPrint = false;
     public static ArrayList dataTracked = new ArrayList<String>();
     
@@ -67,7 +70,7 @@ public class Tracker {
     }
     
     // private static File file = new File("../data/save/Save.txt");
-    private static File file = new File("robotData.txt");
+    private static File file = new File(FILEPATH);
     // saveData.put("this","isthis");
     static String newSave = "";
     public static void save(){
@@ -86,7 +89,7 @@ public class Tracker {
             }
         }
         try{
-            writeFile("robotData.txt", Tracker.newSave); //writes to the file
+            writeFile(FILEPATH, Tracker.newSave); //writes to the file
         } catch (IOException i) {}
 
     }
