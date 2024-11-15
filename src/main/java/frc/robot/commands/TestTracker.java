@@ -18,6 +18,7 @@ public class TestTracker extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Tracker.set("exp", Tracker.get("exp") + 1);
+    Tracker.set("exp", Tracker.getInt("exp") + 1);
+    System.out.println("EXP VALUE IS NOW: " + Tracker.get("exp"));
   }
 }
