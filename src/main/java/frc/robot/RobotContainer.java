@@ -9,6 +9,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TestTracker;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.util.Driverstation;
+import frc.robot.util.Tracker;
 import frc.robot.util.Driverstation.ButtonBinds;
 //import frc.robot.util.Driverstation.ButtonBinds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,6 +33,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    Tracker.set("exp", Tracker.getInt("exp")+1);
   }
 
   /**
