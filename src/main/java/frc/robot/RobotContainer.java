@@ -33,7 +33,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    Tracker.set("exp", Tracker.getInt("exp")+1);
+    Tracker.set("exp", Tracker.get("exp"));
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   /**

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 
 public class Tracker {
 
+    public static int ERROR_RETURN_INT = 9999;
+    public static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
     //public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
     public static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
     public static final String FILE = "/robotData.txt";
@@ -52,17 +55,33 @@ public class Tracker {
     
     //static variables
     public static String get(String keyWord){
-         return Tracker.saveData.get(keyWord);
+         
+         if(variableExists(keyWord)){
+            return Tracker.saveData.get(keyWord);
+        }
+        warn("keyWord '" + keyWord + "' does not exist! error in getInt method");
+        return ERROR_RETURN_STRING;
     }
     public static int getInt(String keyWord){
-         return Integer.valueOf(Tracker.get(keyWord));
+         if(variableExists(keyWord)){
+            return Integer.valueOf(Tracker.get(keyWord));
+        }
+        warn("keyWord '" + keyWord + "' does not exist! error in getInt method");
+        return ERROR_RETURN_INT;
     }
     public static void set(String keyWord, String value){
-         Tracker.saveData.put(keyWord, value);
+        if(variableExists(keyWord)){
+            Tracker.saveData.put(keyWord, value);
+        }
+        warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
     public static void set(String keyWord, int value){
-         Tracker.saveData.put(keyWord, Integer.toString(value));
+        if(variableExists(keyWord)){
+            Tracker.saveData.put(keyWord, Integer.toString(value));
+        }
+        warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
+
     public static String readEntireFile(){
         String bar = "";
         for(String str : Tracker.lineList){
@@ -104,6 +123,13 @@ public class Tracker {
         } catch (IOException i) {}
 
     }
+    private static boolean variableExists(String varname){
+        if(saveData.containsKey(varname)){
+            return true;
+        }
+        return false;
+    }
+
     public static void load(){
         Tracker.saveData.clear();
         Tracker.lineList.clear();
@@ -184,6 +210,11 @@ public class Tracker {
             closeable.close();
         } catch(IOException ignored) {
         }
+    }
+
+    private static void warn(String warning){
+        colorPrint(ANSI_RED, "WARNING!!! TRACKER ERROR: " + warning);
+        DriverStation.reportWarning(ANSI_RED + warning + ANSI_RESET, false);
     }
 
 }

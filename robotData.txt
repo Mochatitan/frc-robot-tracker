@@ -1,3 +1,5 @@
-times-shot:4
-level:5
-exp:81
+ten:10
+twenty:20
+thirty:30
+fourty:40
+fifty:50
