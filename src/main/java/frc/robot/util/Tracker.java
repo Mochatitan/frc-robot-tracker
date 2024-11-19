@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class Tracker {
 
-    public static boolean testPrint = true;
-    public static final String FILE = "/robotData.txt";
+    public static boolean testPrint = false;
+    public static final String FILE = "/robotData.txt"; //format is '/filename.txt'
 
     public static int ERROR_RETURN_INT = 9999;
     public static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
@@ -46,10 +46,11 @@ public class Tracker {
 
     /**
      * This goes in the Robot.java's robotInit() method, and it loads all the data.
-     * Exists mostly to add prints for testing purposes without having to edit the convuluted load method.
+     * Exists mostly to ensure robotData.txt exists, and to add prints for testing purposes without having to edit the convuluted load method.
      */
     public static void initialize(){
-        Tracker.load();
+        //If the file is found, load the file onto the arrays.
+        if(Tracker.robotDataExists()){Tracker.load();}
     }
 
 
@@ -73,12 +74,14 @@ public class Tracker {
     public static void set(String keyWord, String value){
         if(variableExists(keyWord)){
             Tracker.saveData.put(keyWord, value);
+            return;
         }
         warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
     public static void set(String keyWord, int value){
         if(variableExists(keyWord)){
             Tracker.saveData.put(keyWord, Integer.toString(value));
+            return;
         }
         warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
@@ -164,10 +167,12 @@ public class Tracker {
         System.out.println("");
     }
     private static void printAll(){
-        if(testPrint){
-            printLinesRecieved();
-            printVariablesRecieved();
-            printValuesRecieved();
+        if(robotDataExists()){
+            if(testPrint){
+                printLinesRecieved();
+                printVariablesRecieved();
+                printValuesRecieved();
+            }
         }
     }
     
@@ -192,13 +197,8 @@ public class Tracker {
                 // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
                 bar += "\n";
             }
-
-            // String[] arrOfStr = str.split(":", 2);
-            // saveData.put(arrOfStr[0],arrOfStr[1]);
         }
-        // System.out.println(bar);
         return bar;
-
     }
     
     /**
@@ -218,7 +218,6 @@ public class Tracker {
         }
     }
 
-    
     /**
      * a method for checking whether or not a variable exists in the robot data file.
      * @param varname the name of the variable you want to check
@@ -230,7 +229,21 @@ public class Tracker {
         }
         return false;
     }
-    
+    /**
+     * If the file cannot be found, warns the client repeatedly and angrily to fix it.
+     * @return returns true if the file robotData.txt is able to be found successfully
+     */
+    private static boolean robotDataExists(){
+        if(!Tracker.file.exists()){
+            for(int b = 0; b < 20; b++){
+                warn("robotData.txt WAS NOT FOUND!!! EITHER IT WAS NAMED WRONG OR ITS IN THE WRONG DIRECTORY/FOLDER");
+            }
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * Closes the scanner so it doesnt use resources during the actual match
      * @param closeable the scanner

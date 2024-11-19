@@ -1,5 +1,4 @@
 ten:10
 twenty:20
-thirty:30
-fourty:40
-fifty:50
+fourty:69
+exp:20
