@@ -15,17 +15,18 @@ import java.util.ArrayList;
 
 public class Tracker {
 
+    public static boolean testPrint = true;
+    public static final String FILE = "/robotData.txt";
+
     public static int ERROR_RETURN_INT = 9999;
     public static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
     //public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
     public static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
-    public static final String FILE = "/robotData.txt";
     public static final String FILEPATH = ROOTPATH + FILE;
+    private static File file = new File(FILEPATH);
+    private static String newSave = "";
 
-    public static boolean testPrint = true;
-    public static ArrayList<String> dataTracked = new ArrayList<String>();
-    
-
+    //Colors to use for printing
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
@@ -34,26 +35,26 @@ public class Tracker {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
-
     // Declaring ANSI_RESET so that we can reset the color 
     public static final String ANSI_RESET = "\u001B[0m"; 
   
+    //The hashmap and arraylist used for storing data
+    private static ArrayList<String> lineList = new ArrayList<String>();
+    private static ArrayList<String> dataTracked = new ArrayList<String>();
+    private static HashMap<String, String> saveData = new HashMap<String, String>();
+
+
+    /**
+     * This goes in the Robot.java's robotInit() method, and it loads all the data.
+     * Exists mostly to add prints for testing purposes without having to edit the convuluted load method.
+     */
     public static void initialize(){
-        System.out.println(FILEPATH);
         Tracker.load();
-        String[] data = Tracker.loadDataNames();
-        
     }
 
-    private static String[] loadDataNames(){
 
-        return null;
-    }
-    //money, level, exp
-    static HashMap<String, String> saveData = new HashMap<String, String>();
-    static ArrayList<String> lineList = new ArrayList<String>();
     
-    //static variables
+    // a bunch of methods for getting and setting values, duplicates exist so you can feed the parameters strings or integers.
     public static String get(String keyWord){
          
          if(variableExists(keyWord)){
@@ -81,37 +82,20 @@ public class Tracker {
         }
         warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
-
-    public static String readEntireFile(){
-        String bar = "";
-        for(String str : Tracker.lineList){
-            bar += str;
-            if((Tracker.lineList.size()-1) != Tracker.lineList.indexOf(str)){ 
-                // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
-                bar += "\n";
-            }
-
-            // String[] arrOfStr = str.split(":", 2);
-            // saveData.put(arrOfStr[0],arrOfStr[1]);
-        }
-        // System.out.println(bar);
-        return bar;
-
-    }
     
-    // private static File file = new File("../data/save/Save.txt");
-    private static File file = new File(FILEPATH);
-    // saveData.put("this","isthis");
-    static String newSave = "";
+    /**
+     * This is the method that you put in the RobotDisabled() method of the Robot.java class. 
+     * It is the method that actually takes all of the new data that has been logged onto arrays, and it rewrites them into the format for the txt file.
+     * Once reformatted, it rewrites the txt file with the new contents.
+     */
     public static void save(){
         Tracker.newSave = "";
         for(String str : Tracker.lineList){
 
-            //Tracker.newSave += str;
-
-            Tracker.newSave += Tracker.dataTracked.get(Tracker.lineList.indexOf(str));
+            //the new save gets reconstructed using what we broke down earlier.
+            Tracker.newSave += Tracker.dataTracked.get(Tracker.lineList.indexOf(str)); //the part before ':'
             Tracker.newSave += ":";
-            Tracker.newSave += Tracker.saveData.get(Tracker.dataTracked.get(Tracker.lineList.indexOf(str)));
+            Tracker.newSave += Tracker.saveData.get(Tracker.dataTracked.get(Tracker.lineList.indexOf(str))); //the part after ':'
 
             if((Tracker.lineList.size()-1) != Tracker.lineList.indexOf(str)){ 
                 // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
@@ -119,21 +103,20 @@ public class Tracker {
             }
         }
         try{
-            writeFile(FILEPATH, Tracker.newSave); //writes to the file
+            //writes to the file
+            writeFile(FILEPATH, Tracker.newSave); 
         } catch (IOException i) {}
 
     }
-    private static boolean variableExists(String varname){
-        if(saveData.containsKey(varname)){
-            return true;
-        }
-        return false;
-    }
 
+    /**
+     * the function that actually gets the values from the txt file and loads them into the neccessary HashMaps and ArrayLists
+     */
     public static void load(){
         Tracker.saveData.clear();
         Tracker.lineList.clear();
         try {
+            //makes a scanner which scans the entire file line by line, filling a lineList with all the lines
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -144,7 +127,9 @@ public class Tracker {
                 e.printStackTrace();
             }
             for(String str : Tracker.lineList){
+                //for each line, split it into two parts, the part before ':', and the part after.
                 String[] arrOfStr = str.split(":", 2);
+                //connect them as a hash map, so you call the part before ':' to get the part after.
                 saveData.put(arrOfStr[0],arrOfStr[1]);
                 dataTracked.add(arrOfStr[0]);
         }
@@ -186,10 +171,42 @@ public class Tracker {
         }
     }
     
+    /**
+     * 
+     * @param color the ANSI color that you want to make the text
+     * @param msg the message that you want to have a color
+     */
     private static void colorPrint(String color, String msg){
         System.out.println(color + msg + ANSI_RESET); 
     }
+
+    /**
+     * 
+     * @return returns the string of the entire file from top to bottom
+     */
+    public static String readEntireFile(){
+        String bar = "";
+        for(String str : Tracker.lineList){
+            bar += str;
+            if((Tracker.lineList.size()-1) != Tracker.lineList.indexOf(str)){ 
+                // If the current string is equal to the last text of the list, that means its the last one, so dont add an extra line.
+                bar += "\n";
+            }
+
+            // String[] arrOfStr = str.split(":", 2);
+            // saveData.put(arrOfStr[0],arrOfStr[1]);
+        }
+        // System.out.println(bar);
+        return bar;
+
+    }
     
+    /**
+     * 
+     * @param filename the path/file of the file you want to write to.
+     * @param text the text that you want to replace the contents of the file with
+     * @throws IOException
+     */
     private static void writeFile(String filename, String text) throws IOException {
         FileOutputStream fos = null;
         try {
@@ -201,6 +218,19 @@ public class Tracker {
         }
     }
 
+    
+    /**
+     * a method for checking whether or not a variable exists in the robot data file.
+     * @param varname the name of the variable you want to check
+     * @return true if the variable is found in your file, false if it isnt.
+     */
+    private static boolean variableExists(String varname){
+        if(saveData.containsKey(varname)){
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Closes the scanner so it doesnt use resources during the actual match
      * @param closeable the scanner
@@ -212,9 +242,13 @@ public class Tracker {
         }
     }
 
+    /**
+     * a method for easily warning clients of errors, prints to the terminal and the driver station.
+     * @param warning The message that you want to warn with
+     */
     private static void warn(String warning){
-        colorPrint(ANSI_RED, "WARNING!!! TRACKER ERROR: " + warning);
-        DriverStation.reportWarning(ANSI_RED + warning + ANSI_RESET, false);
+        colorPrint(ANSI_RED, "WARNING!!! TRACKER ERROR: " + warning); //prints to the terminal
+        DriverStation.reportWarning(ANSI_RED + warning + ANSI_RESET, false); //prints to the driver station
     }
 
 }
