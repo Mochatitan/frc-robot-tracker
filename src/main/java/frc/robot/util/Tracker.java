@@ -19,8 +19,8 @@ public class Tracker {
     public static final String FILE = "/robotData.txt";
     public static final String FILEPATH = ROOTPATH + FILE;
 
-    public static boolean testPrint = false;
-    public static ArrayList dataTracked = new ArrayList<String>();
+    public static boolean testPrint = true;
+    public static ArrayList<String> dataTracked = new ArrayList<String>();
     
 
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -35,14 +35,16 @@ public class Tracker {
     // Declaring ANSI_RESET so that we can reset the color 
     public static final String ANSI_RESET = "\u001B[0m"; 
   
-    public static void initialize(String...data){
+    public static void initialize(){
         System.out.println(FILEPATH);
         Tracker.load();
-        //dataTracked.addAll(data);
-        for(String str : data){
-            dataTracked.add(str);
-        }
-        //System.out.println(dataTracked.toString()); prints out the data tracked
+        String[] data = Tracker.loadDataNames();
+        
+    }
+
+    private static String[] loadDataNames(){
+
+        return null;
     }
     //money, level, exp
     static HashMap<String, String> saveData = new HashMap<String, String>();
@@ -111,17 +113,6 @@ public class Tracker {
                 String line = scanner.nextLine();
                 Tracker.lineList.add(line);
             }
-            if(testPrint){
-                //Test printing
-                System.out.println("");
-                colorPrint(ANSI_YELLOW,"System reads:");
-                for(String s : Tracker.lineList){
-                    System.out.println(s);
-                }
-                colorPrint(ANSI_YELLOW, "--------------END----------");
-                System.out.println("");
-            }
-
                 scanner.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -129,23 +120,51 @@ public class Tracker {
             for(String str : Tracker.lineList){
                 String[] arrOfStr = str.split(":", 2);
                 saveData.put(arrOfStr[0],arrOfStr[1]);
+                dataTracked.add(arrOfStr[0]);
         }
-        if(testPrint){
-            colorPrint(ANSI_RED, "Values recieved:");
-            System.out.println(Tracker.saveData.get("times-shot"));
-            System.out.println(Tracker.saveData.get("level"));
-            System.out.println(Tracker.saveData.get("exp"));
-            colorPrint(ANSI_RED, "--------------END----------");
-        }
-        
+        printAll(); // test printing that displays all the things taken from the txt file and how they are interpreted into variables
     }
     
-    public static void colorPrint(String color, String msg){
+    private static void printValuesRecieved(){
+        colorPrint(ANSI_RED, "Values recieved:");
+        for(String diddy : Tracker.dataTracked){
+            System.out.println(Tracker.saveData.get(diddy));
+        }
+        colorPrint(ANSI_RED, "--------------END----------");
+    }
+    private static void printVariablesRecieved(){
+        // for(int a = 0; a <= Tracker.dataTracked.size()-1; a++){
+            //     System.out.println(Tracker.dataTracked.get(a));
+            // }
+            colorPrint(ANSI_BLUE, "Variables recieved:");
+            for(String egg : Tracker.dataTracked){
+                System.out.println(egg);
+            }
+            colorPrint(ANSI_BLUE,"--------------END----------\n");
+    }
+    private static void printLinesRecieved(){
+        //Test printing
+        System.out.println("");
+        colorPrint(ANSI_YELLOW,"System reads:");
+        for(String s : Tracker.lineList){
+            System.out.println(s);
+        }
+        colorPrint(ANSI_YELLOW, "--------------END----------");
+        System.out.println("");
+    }
+    private static void printAll(){
+        if(testPrint){
+            printLinesRecieved();
+            printVariablesRecieved();
+            printValuesRecieved();
+        }
+    }
+    
+    private static void colorPrint(String color, String msg){
         System.out.println(color + msg + ANSI_RESET); 
     }
     
-
-    public static void writeFile(String filename, String text) throws IOException {
+    private static void writeFile(String filename, String text) throws IOException {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(filename);
@@ -156,6 +175,10 @@ public class Tracker {
         }
     }
 
+    /**
+     * Closes the scanner so it doesnt use resources during the actual match
+     * @param closeable the scanner
+     */
     public static void close(Closeable closeable) {
         try {
             closeable.close();
