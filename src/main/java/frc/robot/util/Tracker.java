@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.util;
 
 import java.io.Closeable;
 import java.io.File;
@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class Tracker {
 
-    public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
+    //public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
+    public static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
     public static final String FILE = "/robotData.txt";
     public static final String FILEPATH = ROOTPATH + FILE;
 
@@ -35,6 +36,7 @@ public class Tracker {
     public static final String ANSI_RESET = "\u001B[0m"; 
   
     public static void initialize(String...data){
+        System.out.println(FILEPATH);
         Tracker.load();
         //dataTracked.addAll(data);
         for(String str : data){
@@ -45,7 +47,7 @@ public class Tracker {
     //money, level, exp
     static HashMap<String, String> saveData = new HashMap<String, String>();
     static ArrayList<String> lineList = new ArrayList<String>();
-
+    
     //static variables
     public static String get(String keyWord){
          return Tracker.saveData.get(keyWord);
