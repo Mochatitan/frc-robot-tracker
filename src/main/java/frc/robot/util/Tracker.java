@@ -133,8 +133,15 @@ public class Tracker {
                 //for each line, split it into two parts, the part before ':', and the part after.
                 String[] arrOfStr = str.split(":", 2);
                 //connect them as a hash map, so you call the part before ':' to get the part after.
-                saveData.put(arrOfStr[0],arrOfStr[1]);
-                dataTracked.add(arrOfStr[0]);
+                if (arrOfStr.length == 2) {
+                    String key = arrOfStr[0].trim();  // Trim spaces around the key
+                    String value = arrOfStr[1].trim(); // Trim spaces around the value
+                    Tracker.saveData.put(key, value); // Connect them as a hash map
+                    Tracker.dataTracked.add(key);
+                } else {
+                    // Log a warning for improperly formatted lines
+                    System.out.println("Warning: Improperly formatted line skipped - " + str);
+                }
         }
         printAll(); // test printing that displays all the things taken from the txt file and how they are interpreted into variables
     }
