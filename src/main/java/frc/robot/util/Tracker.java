@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class Tracker {
 
-    public static boolean testPrint = false;
+    public static boolean testPrint = true;
     public static final String FILE = "/robotData.txt"; //format is '/filename.txt'
 
     public static int ERROR_RETURN_INT = 9999;
@@ -123,24 +123,33 @@ public class Tracker {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                Tracker.lineList.add(line);
+                //if it has a colon and is properly formatted, add it to the value list.
+                if(hasColon(line)){Tracker.lineList.add(line);}
+                else{warn("LINE HAS NO COLON! ERROR ON " + FILE + "(Line '" + line + "')");}
             }
                 scanner.close();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             for(String str : Tracker.lineList){
-                //for each line, split it into two parts, the part before ':', and the part after.
-                String[] arrOfStr = str.split(":", 2);
-                //connect them as a hash map, so you call the part before ':' to get the part after.
-                if (arrOfStr.length == 2) {
-                    String key = arrOfStr[0].trim();  // Trim spaces around the key
-                    String value = arrOfStr[1].trim(); // Trim spaces around the value
-                    Tracker.saveData.put(key, value); // Connect them as a hash map
-                    Tracker.dataTracked.add(key);
-                } else {
-                    // Log a warning for improperly formatted lines
-                    System.out.println("Warning: Improperly formatted line skipped - " + str);
+
+                //this checks if each line has a colon, and if it doesnt, remove it from the list, and print error message
+                if(hasColon(str)){
+                    //for each line, split it into two parts, the part before ':', and the part after.
+                    String[] arrOfStr = str.split(":", 2);
+                    //connect them as a hash map, so you call the part before ':' to get the part after.
+                    if (arrOfStr.length == 2) {
+                        String key = arrOfStr[0].trim();  // Trim spaces around the key
+                        String value = arrOfStr[1].trim(); // Trim spaces around the value
+                        Tracker.saveData.put(key, value); // Connect them as a hash map
+                        Tracker.dataTracked.add(key);
+                    } else {
+                        // Log a warning for improperly formatted lines
+                        warn("Error, array of variable:value not equal to 2. Line 144: " + str);
+                    }
+                } else{
+                    warn("LINE HAS NO COLON! ERROR ON " + FILE + "(Line " + (lineList.indexOf(str)+1) + ")");
+                    // lineList.remove(str);
                 }
         }
         printAll(); // test printing that displays all the things taken from the txt file and how they are interpreted into variables
@@ -248,6 +257,16 @@ public class Tracker {
             return false;
         }
         return true;
+    }
+
+    private static boolean hasColon(String str){
+        char[] charList = str.toCharArray();
+        for(char cha : charList){
+            if(cha == ':'){
+                return true;
+            }
+        }
+        return false;
     }
 
 

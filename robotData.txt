@@ -1,4 +1,4 @@
 ten:10
 twenty:20
 fourty:69
-exp:20
+level:99
