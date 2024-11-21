@@ -15,28 +15,28 @@ import java.util.ArrayList;
 
 public class Tracker {
 
-    public static boolean testPrint = true;
-    public static final String FILE = "/robotData.txt"; //format is '/filename.txt'
+    private static boolean testPrint = true;
+    private static final String FILE = "/robotData.txt"; //format is '/filename.txt'
 
-    public static int ERROR_RETURN_INT = 9999;
-    public static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
+    private static int ERROR_RETURN_INT = 9999;
+    private static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
     //public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
-    public static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
-    public static final String FILEPATH = ROOTPATH + FILE;
+    private static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
+    private static final String FILEPATH = ROOTPATH + FILE;
     private static File file = new File(FILEPATH);
     private static String newSave = "";
 
     //Colors to use for printing
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m"; 
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
+    private static final String ANSI_BLACK = "\u001B[30m";
+    private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_GREEN = "\u001B[32m";
+    private static final String ANSI_YELLOW = "\u001B[33m"; 
+    private static final String ANSI_BLUE = "\u001B[34m";
+    private static final String ANSI_PURPLE = "\u001B[35m";
+    private static final String ANSI_CYAN = "\u001B[36m";
+    private static final String ANSI_WHITE = "\u001B[37m";
     // Declaring ANSI_RESET so that we can reset the color 
-    public static final String ANSI_RESET = "\u001B[0m"; 
+    private static final String ANSI_RESET = "\u001B[0m"; 
   
     //The hashmap and arraylist used for storing data
     private static ArrayList<String> lineList = new ArrayList<String>();
@@ -56,6 +56,11 @@ public class Tracker {
 
     
     // a bunch of methods for getting and setting values, duplicates exist so you can feed the parameters strings or integers.
+    /**
+     * Method for getting values from the current save data (current data, not from the file directly)
+     * @param keyWord the name of the variable
+     * @return the value of the variable as a string
+     */
     public static String get(String keyWord){
          
          if(variableExists(keyWord)){
@@ -64,6 +69,11 @@ public class Tracker {
         warn("keyWord '" + keyWord + "' does not exist! error in getInt method");
         return ERROR_RETURN_STRING;
     }
+    /**
+     * Method for getting values from the current save data (current data, not from the file directly)
+     * @param keyWord the name of the variable
+     * @return the value of the variable as an integer
+     */
     public static int getInt(String keyWord){
          if(variableExists(keyWord)){
             return Integer.valueOf(Tracker.get(keyWord));
@@ -71,6 +81,11 @@ public class Tracker {
         warn("keyWord '" + keyWord + "' does not exist! error in getInt method");
         return ERROR_RETURN_INT;
     }
+    /**
+     * Method for setting values from the current save data (current data, not from the file directly)
+     * @param keyWord the name of the variable
+     * @param value the new value you are setting it to (string)
+     */
     public static void set(String keyWord, String value){
         if(variableExists(keyWord)){
             Tracker.saveData.put(keyWord, value);
@@ -78,6 +93,11 @@ public class Tracker {
         }
         warn("keyWord '" + keyWord + "' does not exist! error in set method");
     }
+    /**
+     * Method for setting values from the current save data (current data, not from the file directly)
+     * @param keyWord the name of the variable
+     * @param value the new value you are setting it to (Integer)
+     */
     public static void set(String keyWord, int value){
         if(variableExists(keyWord)){
             Tracker.saveData.put(keyWord, Integer.toString(value));
@@ -115,7 +135,7 @@ public class Tracker {
     /**
      * the function that actually gets the values from the txt file and loads them into the neccessary HashMaps and ArrayLists
      */
-    public static void load(){
+    private static void load(){
         Tracker.saveData.clear();
         Tracker.lineList.clear();
         try {
@@ -205,7 +225,7 @@ public class Tracker {
      * 
      * @return returns the string of the entire file from top to bottom
      */
-    public static String readEntireFile(){
+    private static String readEntireFile(){
         String bar = "";
         for(String str : Tracker.lineList){
             bar += str;
@@ -274,7 +294,7 @@ public class Tracker {
      * Closes the scanner so it doesnt use resources during the actual match
      * @param closeable the scanner
      */
-    public static void close(Closeable closeable) {
+    private static void close(Closeable closeable) {
         try {
             closeable.close();
         } catch(IOException ignored) {
