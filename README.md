@@ -12,7 +12,13 @@ Also, to make sure that the new data is pushed to the txt file, add Tracker.save
 Fill it with whatever you want, in a format of 
 data-name:0
 data-name2:0
-Place it in the src/main/**deploy** folder to ensure it gets sent to the roborio
+and place it in the active directory (the one with all your src, and gradle folder. project folder.(view example)
 
 ## HOW TO USE
 Tracker.getInt(nameOfData) will give you the value of what the txt file says, and Tracker.set() will set the value to something else.
+
+## HOW IT WORKS
+it uses the FileSystem.getActiveDirectory when you deploy to the robot, which lets the robot read the robotData.txt file on the computer.
+it then converts the txt file into a HashMap which gets used in all the methods.
+when you change a value with Tracker.set(), it changes the HashMap value.
+when you disable the robot and it runs Tracker.save(), the robot translates the HashMap into the robotData.txt format and rewrites the file.
