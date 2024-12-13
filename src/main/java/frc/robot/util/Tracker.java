@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.util.Scanner;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -270,13 +271,13 @@ public class Tracker {
      * @return returns true if the file robotData.txt is able to be found successfully
      */
     private static boolean robotDataExists(){
-        if(!Tracker.file.exists()){
-            for(int b = 0; b < 20; b++){
-                warn("robotData.txt WAS NOT FOUND!!! EITHER IT WAS NAMED WRONG OR ITS IN THE WRONG DIRECTORY/FOLDER");
-            }
-            return false;
+        if(Filesystem.getLaunchDirectory().canRead()){
+        colorPrint(ANSI_GREEN,"LAUNCH DIRECTORY IS READABLE!");
+            return true;
+        } else {
+            colorPrint(ANSI_RED,"LAUNCH DIRECTORY UNREADABLE, RETRYING...");
+            return robotDataExists();
         }
-        return true;
     }
 
     private static boolean hasColon(String str){
