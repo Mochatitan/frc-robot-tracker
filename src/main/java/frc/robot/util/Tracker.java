@@ -133,12 +133,7 @@ public class Tracker {
 
     }
 
-    /**
-     * the function that actually gets the values from the txt file and loads them into the neccessary HashMaps and ArrayLists
-     */
-    private static void load(){
-        Tracker.saveData.clear();
-        Tracker.lineList.clear();
+    private static void loadFile(){
         try {
             //makes a scanner which scans the entire file line by line, filling a lineList with all the lines
             Scanner scanner = new Scanner(file);
@@ -152,27 +147,38 @@ public class Tracker {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            for(String str : Tracker.lineList){
+    }
+    private static void loadArrays(){
+        for(String str : Tracker.lineList){
 
-                //this checks if each line has a colon, and if it doesnt, remove it from the list, and print error message
-                if(hasColon(str)){
-                    //for each line, split it into two parts, the part before ':', and the part after.
-                    String[] arrOfStr = str.split(":", 2);
-                    //connect them as a hash map, so you call the part before ':' to get the part after.
-                    if (arrOfStr.length == 2) {
-                        String key = arrOfStr[0].trim();  // Trim spaces around the key
-                        String value = arrOfStr[1].trim(); // Trim spaces around the value
-                        Tracker.saveData.put(key, value); // Connect them as a hash map
-                        Tracker.dataTracked.add(key);
-                    } else {
-                        // Log a warning for improperly formatted lines
-                        warn("Error, array of variable:value not equal to 2. Line 144: " + str);
-                    }
-                } else{
-                    warn("LINE HAS NO COLON! ERROR ON " + FILE + "(Line " + (lineList.indexOf(str)+1) + ")");
-                    // lineList.remove(str);
+            //this checks if each line has a colon, and if it doesnt, remove it from the list, and print error message
+            if(hasColon(str)){
+                //for each line, split it into two parts, the part before ':', and the part after.
+                String[] arrOfStr = str.split(":", 2);
+                //connect them as a hash map, so you call the part before ':' to get the part after.
+                if (arrOfStr.length == 2) {
+                    String key = arrOfStr[0].trim();  // Trim spaces around the key
+                    String value = arrOfStr[1].trim(); // Trim spaces around the value
+                    Tracker.saveData.put(key, value); // Connect them as a hash map
+                    Tracker.dataTracked.add(key);
+                } else {
+                    // Log a warning for improperly formatted lines
+                    warn("Error, array of variable:value not equal to 2. Line 144: " + str);
                 }
-        }
+            } else{
+                warn("LINE HAS NO COLON! ERROR ON " + FILE + "(Line " + (lineList.indexOf(str)+1) + ")");
+                // lineList.remove(str);
+            }
+    }
+    }
+    /**
+     * the function that actually gets the values from the txt file and loads them into the neccessary HashMaps and ArrayLists
+     */
+    private static void load(){
+        Tracker.saveData.clear();
+        Tracker.lineList.clear();
+        loadFile();
+        loadArrays();
         printAll(); // test printing that displays all the things taken from the txt file and how they are interpreted into variables
     }
     
