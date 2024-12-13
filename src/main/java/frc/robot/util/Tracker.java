@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.RobotContainer;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class Tracker {
     private static String ERROR_RETURN_STRING = "THIS VARIABLE HAD AN ERROR GETTING THE VALUE";
     //public static final String ROOTPATH = Filesystem.getDeployDirectory().getAbsolutePath();
     private static final String ROOTPATH = Filesystem.getLaunchDirectory().getAbsolutePath();
+    
     private static final String FILEPATH = ROOTPATH + FILE;
     private static File file = new File(FILEPATH);
     private static String newSave = "";
@@ -51,7 +54,13 @@ public class Tracker {
      */
     public static void initialize(){
         //If the file is found, load the file onto the arrays.
-        if(Tracker.robotDataExists()){Tracker.load();}
+        if(Tracker.robotDataExists()){Tracker.load();}else{
+            if(Tracker.robotDataExists()){Tracker.load();}else{
+                if(Tracker.robotDataExists()){Tracker.load();}else{
+                    System.out.println("robotData failed to load 3 times. no bueno.");
+                }
+            }
+        }
     }
 
 
@@ -281,8 +290,8 @@ public class Tracker {
         colorPrint(ANSI_GREEN,"LAUNCH DIRECTORY IS READABLE!");
             return true;
         } else {
-            colorPrint(ANSI_RED,"LAUNCH DIRECTORY UNREADABLE, RETRYING...");
-            return robotDataExists();
+            colorPrint(ANSI_PURPLE,"LAUNCH DIRECTORY UNREADABLE, RETRYING...");
+            return false;
         }
     }
 

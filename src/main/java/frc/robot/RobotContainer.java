@@ -33,7 +33,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    Tracker.set("exp", Tracker.get("exp"));
+    Tracker.set("times-tested", Tracker.getInt("times-tested")+1);
     DriverStation.silenceJoystickConnectionWarning(true);
   }
 
@@ -47,8 +47,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-      new JoystickButton(driverStation, ButtonBinds.RowOne.ONE)
-          .onTrue(new TestTracker());
   }
 
   /**

@@ -1,4 +1,2 @@
-ten:10
-twenty:20
-fourty:69
-level:99
+times-tested:1
+my-age:16
